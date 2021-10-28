@@ -1,0 +1,1890 @@
+zabbix_export:
+  version: '5.4'
+  date: '2021-10-28T06:12:34Z'
+  groups:
+    -
+      uuid: a571c0d144b14fd4a87a9d9b2aa9fcd6
+      name: Templates/Applications
+    -
+      uuid: 82de922ed9c84cd6b3b8268609304972
+      name: 'Testing Services'
+  templates:
+    -
+      uuid: 0f461ebb095d483095cbd2acf9127fd3
+      template: 'Nessus Professional Monitor'
+      name: 'Nessus Professional Monitor'
+      groups:
+        -
+          name: Templates/Applications
+        -
+          name: 'Testing Services'
+      items:
+        -
+          uuid: b60cbcac3cda4d55969bca38c6999b32
+          name: 'Nessus - Folders Count'
+          type: DEPENDENT
+          key: nessus.api.folders.count
+          delay: '0'
+          units: Folders
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.folders.length()
+          master_item:
+            key: nessus.api.folders.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: Folders
+          triggers:
+            -
+              uuid: 879bd560ab754891b632ff47ce269487
+              expression: 'last(/Nessus Professional Monitor/nessus.api.folders.count)>{$NESSUS_ALERT_FOLDERSMAX}'
+              recovery_mode: RECOVERY_EXPRESSION
+              recovery_expression: 'last(/Nessus Professional Monitor/nessus.api.folders.count)<={$NESSUS_ALERT_FOLDERSMAX}'
+              name: 'Nessus Folders Exceed Threshold ({ITEM.LASTVALUE1})'
+              opdata: '{ITEM.LASTVALUE1} / {$NESSUS_ALERT_FOLDERSMAX}'
+              priority: WARNING
+              manual_close: 'YES'
+              tags:
+                -
+                  tag: Nessus-Trigger
+                  value: Folders
+        -
+          uuid: 6ecc4c0f77c34e36a1b646e4116d3147
+          name: nessus.api.folders.data
+          type: HTTP_AGENT
+          key: nessus.api.folders.data
+          history: '0'
+          trends: '0'
+          value_type: TEXT
+          url: '{$NESSUS_HOST}/folders'
+          headers:
+            -
+              name: X-ApiKeys
+              value: 'accessKey={$NESSUS_ACCESSKEY}; secretKey={$NESSUS_SECRETKEY};'
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: Data
+        -
+          uuid: 1205569ec9644c96ade4efc5323117a9
+          name: 'Nessus - Folders List'
+          type: DEPENDENT
+          key: nessus.api.folders.list
+          delay: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - '$.folders.[:].name'
+          master_item:
+            key: nessus.api.folders.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: Folders
+        -
+          uuid: 1d8598a35d814ec6ac3b5b881173b515
+          name: 'Nessus - Scanners Count'
+          type: DEPENDENT
+          key: nessus.api.scanners.count
+          delay: '0'
+          units: Scanners
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.scanners.length()
+          master_item:
+            key: nessus.api.scanners.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: Scanners
+        -
+          uuid: d317eaea37024013af65a1b519fbaca6
+          name: nessus.api.scanners.data
+          type: HTTP_AGENT
+          key: nessus.api.scanners.data
+          history: '0'
+          trends: '0'
+          value_type: TEXT
+          url: '{$NESSUS_HOST}/scanners'
+          headers:
+            -
+              name: X-ApiKeys
+              value: 'accessKey={$NESSUS_ACCESSKEY}; secretKey={$NESSUS_SECRETKEY};'
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: Data
+        -
+          uuid: d7dbe2503d334afd9a969b98c7c985da
+          name: nessus.api.scans.data
+          type: HTTP_AGENT
+          key: nessus.api.scans.data
+          history: '0'
+          trends: '0'
+          status: DISABLED
+          value_type: TEXT
+          url: '{$NESSUS_HOST}/scans'
+          headers:
+            -
+              name: X-ApiKeys
+              value: 'accessKey={$NESSUS_ACCESSKEY}; secretKey={$NESSUS_SECRETKEY};'
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: Data
+        -
+          uuid: 1d2aa6aaa6f24b65a742cc91e66a2db4
+          name: 'Nessus - Active Health Alerts Count'
+          type: DEPENDENT
+          key: nessus.api.server.health.alerts.count
+          delay: '0'
+          units: Alerts
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.length()
+          master_item:
+            key: nessus.api.server.health.alerts.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: Alerts
+        -
+          uuid: 4d97124ac357446288ef63f35ee0af88
+          name: nessus.api.server.health.alerts.data
+          type: HTTP_AGENT
+          key: nessus.api.server.health.alerts.data
+          history: '0'
+          trends: '0'
+          value_type: TEXT
+          url: '{$NESSUS_HOST}/settings/health/alerts'
+          headers:
+            -
+              name: X-ApiKeys
+              value: 'accessKey={$NESSUS_ACCESSKEY}; secretKey={$NESSUS_SECRETKEY};'
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: Data
+        -
+          uuid: 4fc015acec954cb3b80faa911329a918
+          name: 'Nessus - Active Health Alerts Detail'
+          type: DEPENDENT
+          key: nessus.api.server.health.alerts.detail
+          delay: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - '$.[:].alert'
+            -
+              type: TRIM
+              parameters:
+                - '['
+            -
+              type: TRIM
+              parameters:
+                - ']'
+            -
+              type: STR_REPLACE
+              parameters:
+                - ','
+                - \n
+          master_item:
+            key: nessus.api.server.health.alerts.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: Alerts
+        -
+          uuid: b6ae9cdc516644769998214835da12b9
+          name: nessus.api.server.health.stats
+          type: HTTP_AGENT
+          key: nessus.api.server.health.stats
+          history: '0'
+          trends: '0'
+          value_type: TEXT
+          url: '{$NESSUS_HOST}/settings/health/stats'
+          headers:
+            -
+              name: X-ApiKeys
+              value: 'accessKey={$NESSUS_ACCESSKEY}; secretKey={$NESSUS_SECRETKEY};'
+          tags:
+            -
+              tag: Application
+              value: Nessus
+        -
+          uuid: b9c8b40836994384804ab402a86ccf4f
+          name: 'Nessus Server Settings - Scan Vulerability Groups'
+          type: DEPENDENT
+          key: nessus.api.server.properties.capabilities.scan_vulnerability_groups
+          delay: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.capabilities.scan_vulnerability_groups
+          master_item:
+            key: nessus.api.server.properties.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: Settings
+        -
+          uuid: deef3a0c2b4141e1b8b358b52bc980ea
+          name: 'Nessus Server Settings - Scan Vulerability Groups Mixed'
+          type: DEPENDENT
+          key: nessus.api.server.properties.capabilities.scan_vulnerability_groups_mixed
+          delay: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.capabilities.scan_vulnerability_groups_mixed
+          master_item:
+            key: nessus.api.server.properties.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: Settings
+        -
+          uuid: b43294045bd94b719eac66a5cdbeadf9
+          name: nessus.api.server.properties.data
+          type: HTTP_AGENT
+          key: nessus.api.server.properties.data
+          history: '0'
+          trends: '0'
+          value_type: TEXT
+          url: '{$NESSUS_HOST}/server/properties'
+          headers:
+            -
+              name: X-ApiKeys
+              value: 'accessKey={$NESSUS_ACCESSKEY}; secretKey={$NESSUS_SECRETKEY};'
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: Data
+        -
+          uuid: 37d293186520453894992e0833ddc661
+          name: 'Nessus Server License Activation  Code'
+          type: DEPENDENT
+          key: nessus.api.server.properties.license.activaction_code
+          delay: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.license.activation_code
+          master_item:
+            key: nessus.api.server.properties.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: License
+        -
+          uuid: 965c1072f9c5446898ac6aa17d6ed7c2
+          name: 'Nessus Server License Agents Used'
+          type: DEPENDENT
+          key: nessus.api.server.properties.license.agents_used
+          delay: '0'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.license.agents_used
+          master_item:
+            key: nessus.api.server.properties.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: License
+        -
+          uuid: 2077835da32c4a09a49b73199ed71c13
+          name: 'Nessus Server License Auto Renew'
+          type: DEPENDENT
+          key: nessus.api.server.properties.license.auto_renewal
+          delay: '0'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.license.auto_renewal
+          master_item:
+            key: nessus.api.server.properties.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: License
+        -
+          uuid: 45cda9e5071347d3b4a28cd54ea35e96
+          name: 'Nessus Server License Cusotmer ID'
+          type: DEPENDENT
+          key: nessus.api.server.properties.license.customer_id
+          delay: '0'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.license.customer_id
+          master_item:
+            key: nessus.api.server.properties.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: License
+        -
+          uuid: 4a3a951b81694d16a1ad7f0e1fd14d76
+          name: 'Nessus Server License DRM'
+          type: DEPENDENT
+          key: nessus.api.server.properties.license.drm
+          delay: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.license.drm
+          master_item:
+            key: nessus.api.server.properties.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: License
+        -
+          uuid: 72cc48716b5a4016b50595a707e93822
+          name: 'Nessus Server License Eval Mode'
+          type: DEPENDENT
+          key: nessus.api.server.properties.license.eval
+          delay: '0'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.license.eval
+          master_item:
+            key: nessus.api.server.properties.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: License
+        -
+          uuid: 928ad2b7b82c4db2b96afd0abbe3aa5a
+          name: 'Nessus Server License Expires In'
+          type: DEPENDENT
+          key: nessus.api.server.properties.license.expiration_time
+          delay: '0'
+          units: Days
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.expiration_time
+          master_item:
+            key: nessus.api.server.properties.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: License
+          triggers:
+            -
+              uuid: 5f400389f67c4152b4ea03cd1031b589
+              expression: 'last(/Nessus Professional Monitor/nessus.api.server.properties.license.expiration_time)<{$NESSUS_ALERT_LICREMAINING}'
+              recovery_mode: RECOVERY_EXPRESSION
+              recovery_expression: 'last(/Nessus Professional Monitor/nessus.api.server.properties.license.expiration_time)>={$NESSUS_ALERT_LICREMAINING}'
+              name: 'Nessus License Expires In {ITEM.LASTVALUE1}'
+              opdata: '{ITEM.LASTVALUE1}'
+              priority: INFO
+              tags:
+                -
+                  tag: Nessus-Trigger
+                  value: LicenseExpiry
+            -
+              uuid: d2993f28ecbd4226ada7c8f8f9ae8a15
+              expression: 'last(/Nessus Professional Monitor/nessus.api.server.properties.license.expiration_time)<{$NESSUS_ALERT_LICREMAINING}*.1'
+              recovery_mode: RECOVERY_EXPRESSION
+              recovery_expression: 'last(/Nessus Professional Monitor/nessus.api.server.properties.license.expiration_time)>={$NESSUS_ALERT_LICREMAINING}*.1'
+              correlation_mode: TAG_VALUE
+              correlation_tag: LicenseExpiry
+              name: 'Nessus License Expires In {ITEM.LASTVALUE1}'
+              opdata: '{ITEM.LASTVALUE1}'
+              priority: HIGH
+              tags:
+                -
+                  tag: Nessus-Trigger
+                  value: LicenseExpiry
+            -
+              uuid: 9bb09b811c52485aaf8139a81e7fa493
+              expression: 'last(/Nessus Professional Monitor/nessus.api.server.properties.license.expiration_time)<{$NESSUS_ALERT_LICREMAINING}*.5'
+              recovery_mode: RECOVERY_EXPRESSION
+              recovery_expression: 'last(/Nessus Professional Monitor/nessus.api.server.properties.license.expiration_time)>={$NESSUS_ALERT_LICREMAINING}*.5'
+              name: 'Nessus License Expires In {ITEM.LASTVALUE1}'
+              opdata: '{ITEM.LASTVALUE1}'
+              priority: WARNING
+              tags:
+                -
+                  tag: Nessus-Trigger
+                  value: LicenseExpiry
+        -
+          uuid: 022d17d9d0aa41aa8ee952b3624bf805
+          name: 'Nessus Server License Type Name Full'
+          type: DEPENDENT
+          key: nessus.api.server.properties.license.name
+          delay: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.license.name
+          master_item:
+            key: nessus.api.server.properties.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: License
+        -
+          uuid: 3995a3fddf254d6d8db33e642fe63b57
+          name: 'Nessus Server License Scanners Used'
+          type: DEPENDENT
+          key: nessus.api.server.properties.license.scanners_used
+          delay: '0'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.license.scanners_used
+          master_item:
+            key: nessus.api.server.properties.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: License
+        -
+          uuid: 6e4e75b753ea4e33920ebd09f82e394f
+          name: 'Nessus Server License Type'
+          type: DEPENDENT
+          key: nessus.api.server.properties.license.type
+          delay: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.license.type
+          master_item:
+            key: nessus.api.server.properties.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: License
+        -
+          uuid: df4dcdbefe9d460e88289c216d61bbfa
+          name: 'Nessus Server Build - Loaded Plugin Set'
+          type: DEPENDENT
+          key: nessus.api.server.properties.loaded_plugin_set
+          delay: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.loaded_plugin_set
+          master_item:
+            key: nessus.api.server.properties.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: Version
+        -
+          uuid: 2981accda0934981a7f52f367535b395
+          name: 'Nessus Server Build - Nessus Type'
+          type: DEPENDENT
+          key: nessus.api.server.properties.nessus_type
+          delay: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.nessus_type
+          master_item:
+            key: nessus.api.server.properties.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: Version
+        -
+          uuid: 77993744efa045fa81f4d2acb06cbcd2
+          name: 'Nessus Server Build - UI Build'
+          type: DEPENDENT
+          key: nessus.api.server.properties.nessus_ui_build
+          delay: '0'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.nessus_ui_build
+          master_item:
+            key: nessus.api.server.properties.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: Version
+        -
+          uuid: ebc8d6e06a58478186469feb0d2acc1d
+          name: 'Nessus Server Build - GUI Version'
+          type: DEPENDENT
+          key: nessus.api.server.properties.nessus_ui_version
+          delay: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.nessus_ui_version
+          master_item:
+            key: nessus.api.server.properties.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: Version
+        -
+          uuid: 01190885547246bdae8e6b141a46cc2c
+          name: 'Nessus Server Platform'
+          type: DEPENDENT
+          key: nessus.api.server.properties.platform
+          delay: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.platform
+          master_item:
+            key: nessus.api.server.properties.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+        -
+          uuid: 76fb676f471e42de8caa5b167dd2de1b
+          name: 'Nessus Server Build - Plugin Set'
+          type: DEPENDENT
+          key: nessus.api.server.properties.plugin_set
+          delay: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.plugin_set
+          master_item:
+            key: nessus.api.server.properties.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: Version
+        -
+          uuid: ac288c5ba4f44b17a3875ceeae4cc792
+          name: 'Nessus Server Restarting'
+          type: DEPENDENT
+          key: nessus.api.server.properties.restarting
+          delay: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.restarting
+          master_item:
+            key: nessus.api.server.properties.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: restart
+        -
+          uuid: 9a8c03cc759d467696f4646ae904f432
+          name: 'Nessus Server Restart Needed'
+          type: DEPENDENT
+          key: nessus.api.server.properties.restart_needed
+          delay: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.restart_needed
+          master_item:
+            key: nessus.api.server.properties.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: restart
+        -
+          uuid: a189c9a6fa88487f817e9f1b52ee6af0
+          name: 'Nessus Server Build'
+          type: DEPENDENT
+          key: nessus.api.server.properties.server_build
+          delay: '0'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.server_build
+          master_item:
+            key: nessus.api.server.properties.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: Version
+        -
+          uuid: 9134d2e7684a4570ac9f98eb4cc4e437
+          name: 'Nessus Server UUID'
+          type: DEPENDENT
+          key: nessus.api.server.properties.server_uuid
+          delay: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.server_uuid
+          master_item:
+            key: nessus.api.server.properties.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+        -
+          uuid: 5fdd1a12e0344e9f9a028cd045c2a2ad
+          name: 'Nessus Server Build - Server Version'
+          type: DEPENDENT
+          key: nessus.api.server.properties.server_version
+          delay: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.server_version
+          master_item:
+            key: nessus.api.server.properties.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: Version
+        -
+          uuid: 83e7d6eca0094da0ad2b0e255a08f43d
+          name: 'Nessus Server Build - Template Version'
+          type: DEPENDENT
+          key: nessus.api.server.properties.template_version
+          delay: '0'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.template_version
+          master_item:
+            key: nessus.api.server.properties.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: Version
+        -
+          uuid: 92c95626116a40a5b19f01d890dce3cc
+          name: 'Nessus Server Pending Update'
+          type: DEPENDENT
+          key: nessus.api.server.properties.update.new_version
+          delay: '0'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.update.new_version
+          master_item:
+            key: nessus.api.server.properties.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: Update
+        -
+          uuid: 38ba803bef3c4d24a772beea5f27b347
+          name: 'Nessus Server Pending Update Require Restart'
+          type: DEPENDENT
+          key: nessus.api.server.properties.update.restart
+          delay: '0'
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.update.restart
+          master_item:
+            key: nessus.api.server.properties.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: restart
+            -
+              tag: Nessus-API
+              value: Update
+        -
+          uuid: b0c04c6d223f4a509cc86a4a4534b2a3
+          name: 'Nessus Server Users Count'
+          type: DEPENDENT
+          key: nessus.api.server.properties.users_count
+          delay: '0'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.users_count
+          master_item:
+            key: nessus.api.server.properties.data
+          tags:
+            -
+              tag: Application
+              value: Nessus
+        -
+          uuid: 25f38595659944298e14bdcaa98b8a9a
+          name: 'Nessus Server - Stats - DNS -  Average DNS Lookup Time'
+          type: DEPENDENT
+          key: nessus.api.server.stats.avg_dns_lookup_time
+          delay: '0'
+          units: Seconds
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.perf_stats_current.avg_dns_lookup_time
+          master_item:
+            key: nessus.api.server.health.stats
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: ServerStats
+        -
+          uuid: 899ffb3732de4a5f98449d42bccc2203
+          name: 'Nessus Server - Stats - DNS -  Average rDNS Lookup Time'
+          type: DEPENDENT
+          key: nessus.api.server.stats.avg_rdns_lookup_time
+          delay: '0'
+          units: Seconds
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.perf_stats_current.avg_rdns_lookup_time
+          master_item:
+            key: nessus.api.server.health.stats
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: ServerStats
+        -
+          uuid: 9abc19e74f434d599e93bf04656baeeb
+          name: 'Nessus Server - Stats - Bytes Received'
+          type: DEPENDENT
+          key: nessus.api.server.stats.bytes_received
+          delay: '0'
+          units: bytes
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.perf_stats_current.kbytes_received
+            -
+              type: MULTIPLIER
+              parameters:
+                - '1024'
+          master_item:
+            key: nessus.api.server.health.stats
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: ServerStats
+        -
+          uuid: b74b4dfc71834f1fb822dca39120d930
+          name: 'Nessus Server - Stats - Bytes Received - Change'
+          type: DEPENDENT
+          key: nessus.api.server.stats.bytes_received_change
+          delay: '0'
+          units: bytes
+          preprocessing:
+            -
+              type: SIMPLE_CHANGE
+              parameters:
+                - ''
+          master_item:
+            key: nessus.api.server.stats.bytes_received
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: ServerStats
+        -
+          uuid: eb84a17a9403417a8fc469631915e736
+          name: 'Nessus Server - Stats - Bytes Sent'
+          type: DEPENDENT
+          key: nessus.api.server.stats.bytes_sent
+          delay: '0'
+          units: bytes
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.perf_stats_current.kbytes_sent
+            -
+              type: MULTIPLIER
+              parameters:
+                - '1024'
+          master_item:
+            key: nessus.api.server.health.stats
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: ServerStats
+        -
+          uuid: 2cb4f81ab40041ffa2b2f56ef9cc4444
+          name: 'Nessus Server - Stats - Bytes Sent - Change'
+          type: DEPENDENT
+          key: nessus.api.server.stats.bytes_sent_change
+          delay: '0'
+          units: bytes
+          preprocessing:
+            -
+              type: SIMPLE_CHANGE
+              parameters:
+                - ''
+          master_item:
+            key: nessus.api.server.stats.bytes_sent
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: ServerStats
+        -
+          uuid: 7d1dac735a714f66908b9f176c977fd1
+          name: 'Nessus Server - Stats - CPU Util Average'
+          type: DEPENDENT
+          key: nessus.api.server.stats.cpu_load_avg
+          delay: '0'
+          units: '%'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.perf_stats_current.cpu_load_avg
+          master_item:
+            key: nessus.api.server.health.stats
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: ServerStats
+        -
+          uuid: f08c70024bb14f4a936a692e1be9a552
+          name: 'Nessus Server - Stats - CPU Util'
+          type: DEPENDENT
+          key: nessus.api.server.stats.nessus_cpu
+          delay: '0'
+          units: '%'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.perf_stats_current.nessus_cpu
+          master_item:
+            key: nessus.api.server.health.stats
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: ServerStats
+        -
+          uuid: 26e19f56271e48be8aea11915482e4ba
+          name: 'Nessus Server - Stats - DNS -  DNS Lookups'
+          type: DEPENDENT
+          key: nessus.api.server.stats.num_dns_lookups
+          delay: '0'
+          units: Queries
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.perf_stats_current.num_dns_lookups
+          master_item:
+            key: nessus.api.server.health.stats
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: ServerStats
+        -
+          uuid: 09588c7f85404a8798aca3cfdf1d554e
+          name: 'Nessus Server - Stats - Active Scans Hosts'
+          type: DEPENDENT
+          key: nessus.api.server.stats.num_hosts
+          delay: '0'
+          units: Hosts
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.perf_stats_current.num_hosts
+          master_item:
+            key: nessus.api.server.health.stats
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: ServerStats
+          triggers:
+            -
+              uuid: dc55712d71db44649c6a93019639b284
+              expression: 'last(/Nessus Professional Monitor/nessus.api.server.stats.num_hosts)>{$NESSUS_ALERT_SCANSHOSTMAX}'
+              recovery_mode: RECOVERY_EXPRESSION
+              recovery_expression: 'last(/Nessus Professional Monitor/nessus.api.server.stats.num_hosts)<={$NESSUS_ALERT_SCANSHOSTMAX}'
+              name: 'Nessus Scans Hosts Exceeds Threshold ({ITEM.LASTVALUE1} )'
+              opdata: '{ITEM.LASTVALUE1} / {$NESSUS_ALERT_SCANSHOSTMAX}'
+              priority: WARNING
+              tags:
+                -
+                  tag: Nessus-Trigger
+                  value: MaxScansHosts
+        -
+          uuid: cde2b4b8fabb4811a296ed2ae60de804
+          name: 'Nessus Server - Stats - Active Scans Hosts - Change'
+          type: DEPENDENT
+          key: nessus.api.server.stats.num_hosts_change
+          delay: '0'
+          units: hosts
+          preprocessing:
+            -
+              type: SIMPLE_CHANGE
+              parameters:
+                - ''
+          master_item:
+            key: nessus.api.server.stats.num_hosts
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: ServerStats
+        -
+          uuid: ee360cf8d1d64532895083bcfa521218
+          name: 'Nessus Server - Stats - DNS -  rDNS Lookups'
+          type: DEPENDENT
+          key: nessus.api.server.stats.num_rdns_lookups
+          delay: '0'
+          units: Queries
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.perf_stats_current.num_rdns_lookups
+          master_item:
+            key: nessus.api.server.health.stats
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: ServerStats
+        -
+          uuid: d7f71d6230d5443b83213a19f4111f94
+          name: 'Nessus Server - Stats - Active Scans'
+          type: DEPENDENT
+          key: nessus.api.server.stats.num_scans
+          delay: '0'
+          units: Scans
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.perf_stats_current.num_scans
+          master_item:
+            key: nessus.api.server.health.stats
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: ServerStats
+          triggers:
+            -
+              uuid: ff3b471d8db646a09949a5a3eab847a0
+              expression: 'last(/Nessus Professional Monitor/nessus.api.server.stats.num_scans)>{$NESSUS_ALERT_SCANSMAX}'
+              recovery_mode: RECOVERY_EXPRESSION
+              recovery_expression: 'last(/Nessus Professional Monitor/nessus.api.server.stats.num_scans)<={$NESSUS_ALERT_SCANSMAX}'
+              name: 'Nessus Active Scans Exceeded Threshold ({ITEM.LASTVALUE1})'
+              opdata: '{ITEM.LASTVALUE1} / {$NESSUS_ALERT_SCANSMAX}'
+              priority: WARNING
+              tags:
+                -
+                  tag: Nessus-Trigger
+                  value: MaxScans
+        -
+          uuid: 7b924e521bfa41cc8bbf611e06dd7385
+          name: 'Nessus Server - Stats - Active Scans - Change'
+          type: DEPENDENT
+          key: nessus.api.server.stats.num_scans_change
+          delay: '0'
+          units: scans
+          preprocessing:
+            -
+              type: SIMPLE_CHANGE
+              parameters:
+                - ''
+          master_item:
+            key: nessus.api.server.stats.num_scans
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: ServerStats
+        -
+          uuid: 61aa77633bd840c9b5632ad3bb9f7720
+          name: 'Nessus Server - Stats - Nessus TCP Sessions'
+          type: DEPENDENT
+          key: nessus.api.server.stats.num_tcp_sessions
+          delay: '0'
+          units: 'TCP Sessions'
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.perf_stats_current.num_tcp_sessions
+          master_item:
+            key: nessus.api.server.health.stats
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: ServerStats
+          triggers:
+            -
+              uuid: ec645dddbfb74fc0ab79f36bd5c91358
+              expression: 'last(/Nessus Professional Monitor/nessus.api.server.stats.num_tcp_sessions)>{$NESSUS_ALERT_TCPMAX}'
+              recovery_mode: RECOVERY_EXPRESSION
+              recovery_expression: 'last(/Nessus Professional Monitor/nessus.api.server.stats.num_tcp_sessions)<={$NESSUS_ALERT_TCPMAX}'
+              name: 'Nessus TCP Sessions Exceeds Threshold ({ITEM.LASTVALUE1})'
+              opdata: '{ITEM.LASTVALUE1} / {$NESSUS_ALERT_TCPMAX}'
+              priority: WARNING
+              tags:
+                -
+                  tag: Nessus-Trigger
+                  value: MaxTCPSessions
+        -
+          uuid: f915102971604ae9bef3a11fcd17a35f
+          name: 'Nessus Server - Stats - Nessus TCP Sessions - Change'
+          type: DEPENDENT
+          key: nessus.api.server.stats.num_tcp_sessions_change
+          delay: '0'
+          units: 'TCP Sessions'
+          preprocessing:
+            -
+              type: SIMPLE_CHANGE
+              parameters:
+                - ''
+          master_item:
+            key: nessus.api.server.stats.num_tcp_sessions
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: ServerStats
+        -
+          uuid: ed317a2f1ba04612940a1bd2f2298313
+          name: 'Nessus Server - Stats - Plugins Code Corrupted'
+          type: DEPENDENT
+          key: nessus.api.server.stats.plugins_code_db_corrupted
+          delay: '0'
+          units: Plugins
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.perf_stats_current.plugins_code_db_corrupted
+          master_item:
+            key: nessus.api.server.health.stats
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: ServerStats
+        -
+          uuid: f0990dcb2daf4453ad5a50f65649e1b8
+          name: 'Nessus Server - Stats - Plugins Database Corrupted'
+          type: DEPENDENT
+          key: nessus.api.server.stats.plugins_description_db_corrupted
+          delay: '0'
+          units: Plugins
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.perf_stats_current.plugins_description_db_corrupted
+          master_item:
+            key: nessus.api.server.health.stats
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: ServerStats
+        -
+          uuid: 9bc4c6289dfd41ecb6d68af9e836934d
+          name: 'Nessus Server - Stats - Plugins Failed to Compile'
+          type: DEPENDENT
+          key: nessus.api.server.stats.plugins_failed_to_compile_count
+          delay: '0'
+          units: Plugins
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.perf_stats_current.plugins_failed_to_compile_count
+          master_item:
+            key: nessus.api.server.health.stats
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: ServerStats
+        -
+          uuid: f8b47a81e5b445e4ad5063cd3107b002
+          name: 'Nessus Server Status'
+          type: HTTP_AGENT
+          key: nessus.api.server.status
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            -
+              type: JSONPATH
+              parameters:
+                - $.status
+          url: '{$NESSUS_HOST}/server/status'
+          headers:
+            -
+              name: X-ApiKeys
+              value: 'accessKey={$NESSUS_ACCESSKEY}; secretKey={$NESSUS_SECRETKEY};'
+          tags:
+            -
+              tag: Application
+              value: Nessus
+            -
+              tag: Nessus-API
+              value: Status
+          triggers:
+            -
+              uuid: dd545fee9e1b4dea9bee7083159dfd65
+              expression: 'last(/Nessus Professional Monitor/nessus.api.server.status)<>"ready"'
+              recovery_mode: RECOVERY_EXPRESSION
+              recovery_expression: 'last(/Nessus Professional Monitor/nessus.api.server.status)="ready"'
+              name: 'Nessus Server Status is not ready ({ITEM.LASTVALUE1})'
+              opdata: '{ITEM.LASTVALUE1}'
+              priority: WARNING
+              manual_close: 'YES'
+      tags:
+        -
+          tag: Application
+          value: API
+        -
+          tag: Application
+          value: Nessus
+      macros:
+        -
+          macro: '{$NESSUS_ACCESSKEY}'
+          value: 'YOUR ACCESS KEY'
+          description: 'Nessus Access Key'
+        -
+          macro: '{$NESSUS_ALERT_ALERTSMAX}'
+          value: '2'
+          description: 'Max Number of Health Alerts before Trigger'
+        -
+          macro: '{$NESSUS_ALERT_FOLDERSMAX}'
+          value: '50'
+          description: 'Max Number of Folders before Trigger'
+        -
+          macro: '{$NESSUS_ALERT_LICREMAINING}'
+          value: '60'
+          description: 'Minimum Number of Days Before License Expires Trigger'
+        -
+          macro: '{$NESSUS_ALERT_SCANSHOSTMAX}'
+          value: '200'
+          description: 'Max Number of Scans Hosts before Trigger'
+        -
+          macro: '{$NESSUS_ALERT_SCANSMAX}'
+          value: '10'
+          description: 'Max Number of Scans before Trigger'
+        -
+          macro: '{$NESSUS_ALERT_TCPMAX}'
+          value: '1000'
+          description: 'Max Number of TCP Connections before Trigger'
+        -
+          macro: '{$NESSUS_HOST}'
+          value: 'https://127.0.0.1:8834'
+          description: 'Nessus Host and API Path'
+        -
+          macro: '{$NESSUS_SECRETKEY}'
+          value: 'YOUR SECRET KEY'
+          description: 'Nessus Secret Key'
+      dashboards:
+        -
+          uuid: a42038e74ea54c57a6b48a6a606c6b0e
+          name: 'Nessus Server'
+          pages:
+            -
+              widgets:
+                -
+                  type: GRAPH_CLASSIC
+                  x: '12'
+                  'y': '10'
+                  width: '12'
+                  height: '5'
+                  fields:
+                    -
+                      type: GRAPH
+                      name: graphid
+                      value:
+                        name: 'Nessus CPU Util'
+                        host: 'Nessus Professional Monitor'
+                -
+                  type: GRAPH_CLASSIC
+                  name: 'Active Health Alerts'
+                  'y': '20'
+                  width: '12'
+                  height: '5'
+                  fields:
+                    -
+                      type: GRAPH
+                      name: graphid
+                      value:
+                        name: 'Nessus Active Health Alerts'
+                        host: 'Nessus Professional Monitor'
+                -
+                  type: GRAPH_CLASSIC
+                  name: 'Active Scan hosts'
+                  x: '12'
+                  width: '12'
+                  height: '5'
+                  fields:
+                    -
+                      type: GRAPH
+                      name: graphid
+                      value:
+                        name: 'Nessus Active Scan Hosts'
+                        host: 'Nessus Professional Monitor'
+                -
+                  type: GRAPH_CLASSIC
+                  name: 'Active Scans'
+                  width: '12'
+                  height: '5'
+                  fields:
+                    -
+                      type: GRAPH
+                      name: graphid
+                      value:
+                        name: 'Nessus Active Scans'
+                        host: 'Nessus Professional Monitor'
+                -
+                  type: PLAIN_TEXT
+                  name: 'Alert Detail'
+                  x: '12'
+                  'y': '20'
+                  width: '12'
+                  height: '5'
+                  fields:
+                    -
+                      type: INTEGER
+                      name: show_lines
+                      value: '1'
+                    -
+                      type: ITEM
+                      name: itemids
+                      value:
+                        key: nessus.api.server.health.alerts.detail
+                        host: 'Nessus Professional Monitor'
+                -
+                  type: GRAPH_CLASSIC
+                  name: 'DNS Stats'
+                  x: '12'
+                  'y': '15'
+                  width: '12'
+                  height: '5'
+                  fields:
+                    -
+                      type: GRAPH
+                      name: graphid
+                      value:
+                        name: 'Nessus DNS Stats'
+                        host: 'Nessus Professional Monitor'
+                -
+                  type: GRAPH_CLASSIC
+                  name: 'Folders Count'
+                  'y': '10'
+                  width: '12'
+                  height: '5'
+                  fields:
+                    -
+                      type: GRAPH
+                      name: graphid
+                      value:
+                        name: 'Nessus Folders'
+                        host: 'Nessus Professional Monitor'
+                -
+                  type: GRAPH_CLASSIC
+                  name: 'Network Traffic'
+                  'y': '5'
+                  width: '12'
+                  height: '5'
+                  fields:
+                    -
+                      type: GRAPH
+                      name: graphid
+                      value:
+                        name: 'Nessus Network Traffic'
+                        host: 'Nessus Professional Monitor'
+                -
+                  type: GRAPH_CLASSIC
+                  name: 'TCP Sessions'
+                  x: '12'
+                  'y': '5'
+                  width: '12'
+                  height: '5'
+                  fields:
+                    -
+                      type: GRAPH
+                      name: graphid
+                      value:
+                        name: 'Nessus TCP Sessions'
+                        host: 'Nessus Professional Monitor'
+                -
+                  type: PLAIN_TEXT
+                  name: Version
+                  'y': '15'
+                  width: '12'
+                  height: '5'
+                  fields:
+                    -
+                      type: INTEGER
+                      name: show_lines
+                      value: '8'
+                    -
+                      type: ITEM
+                      name: itemids
+                      value:
+                        key: nessus.api.server.properties.server_build
+                        host: 'Nessus Professional Monitor'
+                    -
+                      type: ITEM
+                      name: itemids
+                      value:
+                        key: nessus.api.server.properties.nessus_ui_version
+                        host: 'Nessus Professional Monitor'
+                    -
+                      type: ITEM
+                      name: itemids
+                      value:
+                        key: nessus.api.server.properties.loaded_plugin_set
+                        host: 'Nessus Professional Monitor'
+                    -
+                      type: ITEM
+                      name: itemids
+                      value:
+                        key: nessus.api.server.properties.nessus_type
+                        host: 'Nessus Professional Monitor'
+                    -
+                      type: ITEM
+                      name: itemids
+                      value:
+                        key: nessus.api.server.properties.plugin_set
+                        host: 'Nessus Professional Monitor'
+                    -
+                      type: ITEM
+                      name: itemids
+                      value:
+                        key: nessus.api.server.properties.server_version
+                        host: 'Nessus Professional Monitor'
+                    -
+                      type: ITEM
+                      name: itemids
+                      value:
+                        key: nessus.api.server.properties.template_version
+                        host: 'Nessus Professional Monitor'
+                    -
+                      type: ITEM
+                      name: itemids
+                      value:
+                        key: nessus.api.server.properties.nessus_ui_build
+                        host: 'Nessus Professional Monitor'
+        -
+          uuid: 692c49274b2c4077ba0cef541210cfa1
+          name: 'Nessus Server - License'
+          pages:
+            -
+              widgets:
+                -
+                  type: PLAIN_TEXT
+                  'y': '5'
+                  width: '9'
+                  height: '8'
+                  fields:
+                    -
+                      type: INTEGER
+                      name: show_lines
+                      value: '9'
+                    -
+                      type: ITEM
+                      name: itemids
+                      value:
+                        key: nessus.api.server.properties.license.activaction_code
+                        host: 'Nessus Professional Monitor'
+                    -
+                      type: ITEM
+                      name: itemids
+                      value:
+                        key: nessus.api.server.properties.license.auto_renewal
+                        host: 'Nessus Professional Monitor'
+                    -
+                      type: ITEM
+                      name: itemids
+                      value:
+                        key: nessus.api.server.properties.license.customer_id
+                        host: 'Nessus Professional Monitor'
+                    -
+                      type: ITEM
+                      name: itemids
+                      value:
+                        key: nessus.api.server.properties.license.drm
+                        host: 'Nessus Professional Monitor'
+                    -
+                      type: ITEM
+                      name: itemids
+                      value:
+                        key: nessus.api.server.properties.license.eval
+                        host: 'Nessus Professional Monitor'
+                    -
+                      type: ITEM
+                      name: itemids
+                      value:
+                        key: nessus.api.server.properties.license.expiration_time
+                        host: 'Nessus Professional Monitor'
+                    -
+                      type: ITEM
+                      name: itemids
+                      value:
+                        key: nessus.api.server.properties.license.type
+                        host: 'Nessus Professional Monitor'
+                    -
+                      type: ITEM
+                      name: itemids
+                      value:
+                        key: nessus.api.server.properties.license.name
+                        host: 'Nessus Professional Monitor'
+                    -
+                      type: ITEM
+                      name: itemids
+                      value:
+                        key: nessus.api.server.properties.server_uuid
+                        host: 'Nessus Professional Monitor'
+                -
+                  type: GRAPH_CLASSIC
+                  name: 'License Expiry'
+                  width: '16'
+                  height: '5'
+                  fields:
+                    -
+                      type: GRAPH
+                      name: graphid
+                      value:
+                        name: 'Nessus License Expiry'
+                        host: 'Nessus Professional Monitor'
+                -
+                  type: PLAIN_TEXT
+                  name: 'Nessus Version'
+                  x: '9'
+                  'y': '5'
+                  width: '7'
+                  height: '8'
+                  fields:
+                    -
+                      type: INTEGER
+                      name: show_lines
+                      value: '8'
+                    -
+                      type: ITEM
+                      name: itemids
+                      value:
+                        key: nessus.api.server.properties.server_build
+                        host: 'Nessus Professional Monitor'
+                    -
+                      type: ITEM
+                      name: itemids
+                      value:
+                        key: nessus.api.server.properties.nessus_ui_version
+                        host: 'Nessus Professional Monitor'
+                    -
+                      type: ITEM
+                      name: itemids
+                      value:
+                        key: nessus.api.server.properties.loaded_plugin_set
+                        host: 'Nessus Professional Monitor'
+                    -
+                      type: ITEM
+                      name: itemids
+                      value:
+                        key: nessus.api.server.properties.nessus_type
+                        host: 'Nessus Professional Monitor'
+                    -
+                      type: ITEM
+                      name: itemids
+                      value:
+                        key: nessus.api.server.properties.plugin_set
+                        host: 'Nessus Professional Monitor'
+                    -
+                      type: ITEM
+                      name: itemids
+                      value:
+                        key: nessus.api.server.properties.server_version
+                        host: 'Nessus Professional Monitor'
+                    -
+                      type: ITEM
+                      name: itemids
+                      value:
+                        key: nessus.api.server.properties.template_version
+                        host: 'Nessus Professional Monitor'
+                    -
+                      type: ITEM
+                      name: itemids
+                      value:
+                        key: nessus.api.server.properties.nessus_ui_build
+                        host: 'Nessus Professional Monitor'
+  triggers:
+    -
+      uuid: 649b0c5c361b498c92dcc880222621b4
+      expression: 'last(/Nessus Professional Monitor/nessus.api.server.health.alerts.count)>{$NESSUS_ALERT_ALERTSMAX} and last(/Nessus Professional Monitor/nessus.api.server.health.alerts.detail)<>0'
+      recovery_mode: RECOVERY_EXPRESSION
+      recovery_expression: 'last(/Nessus Professional Monitor/nessus.api.server.health.alerts.count)<={$NESSUS_ALERT_ALERTSMAX}'
+      name: 'Nessus Health Alerts Exceed Theshold ({ITEM.LASTVALUE1}) | {ITEM.LASTVALUE2}'
+      opdata: '{ITEM.LASTVALUE1} / {$NESSUS_ALERT_ALERTSMAX} | {ITEM.LASTVALUE2}'
+      priority: WARNING
+      tags:
+        -
+          tag: Nessus-Trigger
+          value: HealthAlerts
+  graphs:
+    -
+      uuid: 1d034ee99a944d66bdda2ef2f6707844
+      name: 'Nessus Active Health Alerts'
+      ymin_type_1: FIXED
+      graph_items:
+        -
+          sortorder: '1'
+          color: 1A7C11
+          item:
+            host: 'Nessus Professional Monitor'
+            key: nessus.api.server.health.alerts.count
+    -
+      uuid: 9c76b96c3b18497b8f028c1c64da675d
+      name: 'Nessus Active Scan Hosts'
+      ymin_type_1: FIXED
+      graph_items:
+        -
+          sortorder: '1'
+          color: 1A7C11
+          item:
+            host: 'Nessus Professional Monitor'
+            key: nessus.api.server.stats.num_hosts
+    -
+      uuid: cc24dc4153f946068c7f0c80070d51d2
+      name: 'Nessus Active Scans'
+      ymin_type_1: FIXED
+      graph_items:
+        -
+          sortorder: '1'
+          color: 1A7C11
+          item:
+            host: 'Nessus Professional Monitor'
+            key: nessus.api.server.stats.num_scans
+    -
+      uuid: 54657daa4bde475f9ba1362ec26fa8d4
+      name: 'Nessus CPU Util'
+      ymin_type_1: FIXED
+      graph_items:
+        -
+          sortorder: '1'
+          color: 1A7C11
+          item:
+            host: 'Nessus Professional Monitor'
+            key: nessus.api.server.stats.nessus_cpu
+        -
+          sortorder: '2'
+          color: 0040FF
+          item:
+            host: 'Nessus Professional Monitor'
+            key: nessus.api.server.stats.cpu_load_avg
+    -
+      uuid: c086db8a13214c799ce239b2c93b7fa3
+      name: 'Nessus DNS Stats'
+      ymin_type_1: FIXED
+      graph_items:
+        -
+          sortorder: '1'
+          color: 1A7C11
+          item:
+            host: 'Nessus Professional Monitor'
+            key: nessus.api.server.stats.avg_dns_lookup_time
+        -
+          sortorder: '2'
+          color: F63100
+          item:
+            host: 'Nessus Professional Monitor'
+            key: nessus.api.server.stats.avg_rdns_lookup_time
+        -
+          sortorder: '3'
+          color: 2774A4
+          yaxisside: RIGHT
+          item:
+            host: 'Nessus Professional Monitor'
+            key: nessus.api.server.stats.num_dns_lookups
+        -
+          sortorder: '4'
+          color: A54F10
+          yaxisside: RIGHT
+          item:
+            host: 'Nessus Professional Monitor'
+            key: nessus.api.server.stats.num_rdns_lookups
+    -
+      uuid: c57c9aff959d4851881a9aaee1288432
+      name: 'Nessus Folders'
+      ymin_type_1: FIXED
+      graph_items:
+        -
+          sortorder: '1'
+          color: 1A7C11
+          item:
+            host: 'Nessus Professional Monitor'
+            key: nessus.api.folders.count
+    -
+      uuid: f94f385987834ff3aaacc901e4a27104
+      name: 'Nessus License Expiry'
+      ymin_type_1: FIXED
+      graph_items:
+        -
+          sortorder: '1'
+          color: 1A7C11
+          item:
+            host: 'Nessus Professional Monitor'
+            key: nessus.api.server.properties.license.expiration_time
+    -
+      uuid: 17505319ee054d8786022cefcd714f9d
+      name: 'Nessus Network Traffic'
+      ymin_type_1: FIXED
+      graph_items:
+        -
+          sortorder: '1'
+          color: 1A7C11
+          item:
+            host: 'Nessus Professional Monitor'
+            key: nessus.api.server.stats.bytes_received
+        -
+          sortorder: '2'
+          color: F63100
+          item:
+            host: 'Nessus Professional Monitor'
+            key: nessus.api.server.stats.bytes_sent
+    -
+      uuid: 3418d0fb00c547ccb513003cee817864
+      name: 'Nessus TCP Sessions'
+      ymin_type_1: FIXED
+      graph_items:
+        -
+          sortorder: '1'
+          color: 1A7C11
+          item:
+            host: 'Nessus Professional Monitor'
+            key: nessus.api.server.stats.num_tcp_sessions
+    -
+      uuid: 52e13649d4964820b251891bebdb1bf5
+      name: 'Nessus User Count'
+      ymin_type_1: FIXED
+      graph_items:
+        -
+          sortorder: '1'
+          color: 1A7C11
+          item:
+            host: 'Nessus Professional Monitor'
+            key: nessus.api.server.properties.users_count
