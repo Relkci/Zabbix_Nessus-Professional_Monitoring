@@ -34,6 +34,44 @@ This template is used to monitor and alert on a Nessus Professional Installation
 - License Expires in xx days
 - Server Status not ready
 
+# Screenshots
+
+Dashboard - Active Scans and Active Scan Hosts (7 days)
+![](images/screenshot1.png)
+
+Dashboard - Network Traffic (7 days)
+![](images/screenshot2.png)
+
+Dashboard - TCP Sessions (7 days)
+![](images/sceenshot3.png)
+
+Dashboard - Folder Count (7 days)
+![](images/screenshot4.png)
+
+Dashboard - Nessus Process CPU Util (7 days)
+![](images/screenshot5.png)
+
+Dashboard - Nessus Versioning 
+![](images/screenshot6.png)
+
+Dashboard - Nessus DNS Stats
+![](images/screenshot7.png)
+
+Dashboard - Active Health Alerts 
+![](images/screenshot8.png)
+
+Dashboard - Nessus License Expiry Approach
+![](images/screenshot9.png)
+
+Dashboard - Nessus Professional License Information
+![](images/screenshot10.png)
+
+Triggers 
+![](images/screenshot11.png)
+
+Graphs
+
+![](images/screenshot12.png)
 
 ## Known Limitations & Issues
 - 
